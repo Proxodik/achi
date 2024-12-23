@@ -1,14 +1,14 @@
 import {getAchivementCard} from "./achivementCard.js";
 
-import {db} from "../../firebase/firebase-config.js";// Импортируем db
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js"; // Импортируем нужные функции для RTDB
+import {db} from "../../firebase/firebase-config.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
 function addAchievementToFirestore(data) {
-    const achievementId = data.id || Date.now().toString(); // Если нет ID, используем текущее время
 
-    const achievementRef = ref(db, 'achievements/' + achievementId); // Путь к данным
+    const achievementRef = ref(db, 'achievements/' + data.id);
 
     set(achievementRef, {
+        id: data.id,
         title: data.title || 'Achi',
         description: data.description || 'No description',
         date: data.date || "",
@@ -76,7 +76,10 @@ const createModal = () => {
         const imageUrl = imageInput.value.trim();
         const resourceLink = resourceLinkInput.value.trim();
 
-        const data = {title, description, date, imageUrl, resourceLink};
+        const id = Date.now().toString();
+
+        const data = {title, description, date, imageUrl, resourceLink, id};
+        console.log(data);
 
         const newCard = getAchivementCard(data);
         addAchievementToFirestore(data);
